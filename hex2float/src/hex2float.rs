@@ -128,6 +128,7 @@ fn hex2binary(hex: &str) -> Vec<u8> {
                     bin_vec.push(1);
                     bin_vec.push(1)},
             ' ' => continue,
+            '_' => continue,
             _ => panic!("non hex value in input: {letter}"),
         }
     }
