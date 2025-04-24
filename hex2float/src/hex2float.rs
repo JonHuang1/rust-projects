@@ -1,3 +1,25 @@
+use std::process;
+
+pub fn build_hex_string(args: &[String]) -> String {
+    let mut hex_string: String;
+    if let 2 = args.len() {
+        hex_string = args[1].clone();
+    } else if let 5 = args.len() {
+        hex_string = args[1].clone();
+        hex_string.push_str(&args[2]);
+        hex_string.push_str(&args[3]);
+        hex_string.push_str(&args[4]);
+    }
+    else {
+        eprintln!("Invalid number of arguments");
+        process::exit(1);
+    }
+    if hex_string.len() < 16 {
+        hex_string = String::from("0000000000000000") + hex_string.as_str();
+    }
+    hex_string[(hex_string.len()-16)..].to_string()
+}
+
 pub fn hex2float(hex: &str) {
     println!("input: {}", hex);
     let bin_vec: Vec<u8> = hex2binary(hex); 
@@ -24,15 +46,6 @@ fn binary2float(bin_vec: &Vec<u8>) {
         result = sign * base.powf((exp_dec - 1023) as f64) * (1.0 + base.powf(mantissa_dec as f64 - 53.0));
     }
     println!("{}", result);
-}
-
-fn mantissa2decimal(bin_array: &[u8]) -> f64 {
-    let mut result: f64 = 0.0;
-    let base: f64 = 2.0;
-    for (i, bit) in bin_array.iter().enumerate() {
-        result = result + *bit as f64 / base.powf(i as f64);
-    }
-    return result;
 }
 
 fn binary2decimal(bin_array: &[u8]) -> i64 {
