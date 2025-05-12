@@ -4,7 +4,7 @@ use std::process;
 use minigrep::Config;
 
 fn main() {
-    let args: Vec<String> = env::args().collect();
+//    let args: Vec<String> = env::args().collect();
 
 //    let query = &args[1];
 //    let file_path = &args[2];

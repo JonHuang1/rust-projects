@@ -48,13 +48,21 @@ pub fn search_case_insensitive<'a>(
 }
 
 pub fn search<'a>(query: &str, contents: &'a str) -> Vec<&'a str> {
-    let mut results: Vec<&'a str> = Vec::new();
-    for line in contents.lines() {
-        if line.contains(query) {
-            results.push(line);
-        }
-    }
-    results
+/* 
+ * changed to more consice way using iterator adaptor methods
+ */
+//    let mut results: Vec<&'a str> = Vec::new();
+//    for line in contents.lines() {
+//        if line.contains(query) {
+//            results.push(line);
+//        }
+//    }
+//    results
+
+    contents
+        .lines()
+        .filter(|line| line.contains(query))
+        .collect()
 }
 
 pub fn run(config: Config) -> Result<(), Box<dyn Error>> {
@@ -94,13 +102,21 @@ impl Config {
 //        Config { query, file_path }
 //    }
 
-    pub fn build(args: &[String]) -> Result<Config, &'static str> {
-        if args.len() < 3 {
-            return Err("not enough arguments");
-        }
+    pub fn build(
+        mut args: impl Iterator<Item = String>, 
+    ) -> Result<Config, &'static str> {
+        // Call .next() once to skip first argument which is the name of program
+        args.next();
         
-        let query = args[1].clone();
-        let file_path = args[2].clone();
+        let query = match args.next() {
+            Some(arg) => arg,
+            None => return Err("Didn't get a query string"),
+        };
+
+        let file_path = match args.next() {
+            Some(arg) => arg,
+            None => return Err("Didn't get a file path"),
+        };
 
         // .is_ok() returns Result type and just checks if IGNORE_CASE 
         // is set to anything at al if it is returns value it is set to
